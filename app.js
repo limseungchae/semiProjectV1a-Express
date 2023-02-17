@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const { engine } = require('express-handlebars');
+const bodyParser = require('body-parser');
+const oracledb = require('./models/Oracle');
 
 // 라우팅 모듈 설정
 const indexRouter = require('./routes/index');
@@ -31,6 +33,13 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 // 서버 작동 현황 표시 - 로그 출력
 app.use(logger('dev'));
+
+oracledb.initConn();
+
+// 미들웨어 관련설정
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 // 라우팅 모듈 등록 - 클라이언트 요청 처리 핵심 파트
 app.use('/', indexRouter);
