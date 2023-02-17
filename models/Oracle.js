@@ -13,14 +13,12 @@ const Oracle = {
         } catch (e) { console.log(e); }
     },
 
-
-
-    colseConn: async (conn) => {
-        if(conn) {
-            try {conn.close(); }
-            catch (e) {console.log(e); }
-            }
+    closeConn: async (conn) => {
+        if (conn) {
+            try { await conn.close(); }
+            catch (e) { console.log(e); }
         }
-    };
+    }
+}
 
 module.exports = Oracle;

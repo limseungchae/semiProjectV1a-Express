@@ -8,7 +8,7 @@ const processJoin = () => {
     if (frm.email.value === '') alert('이메일?');
     else {
         frm.method = 'post';
-        frm.onsubmit();
+        frm.submit();
     }
 };
 
