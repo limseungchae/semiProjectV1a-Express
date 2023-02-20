@@ -102,6 +102,7 @@ class Board {
 
         return bds;
     }
+
     async update() {
         let conn = null;
         let params = [];
@@ -117,6 +118,7 @@ class Board {
 
         return insertcnt;
     }
+
     async delete() {
         let conn = null;
         let params = [];

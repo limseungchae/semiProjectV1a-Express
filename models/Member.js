@@ -3,6 +3,8 @@ const oracledb = require('../models/Oracle');
 let membersql = {
     insertsql : ' insert into member (mno,userid,passwd,name,email) ' +
                 ' values (mno.nextval, :1,:2,:3,:4) ',
+    loginsql : ' select count(userid) cnt from member ' +
+               ' where userid = :1 and passwd = :2 ',
 }
 
 class Member {
@@ -31,6 +33,36 @@ class Member {
         }
     }
 
+    async login(uid, pwd) {  // 로그인처리
+        let conn = null;
+        let params = [uid, pwd];
+        let isLogin = 0;
+
+        try {
+            conn = await oracledb.makeConn();
+            let result = await conn.execute(
+                membersql.loginsql, params, oracledb.options);
+            let rs = result.resultSet;
+
+            let row = null;
+            while((row = await rs.getRow())) {
+                isLogin = row.CNT;
+            }
+
+        } catch (e) {
+            console.log(e);
+        } finally {
+            await oracledb.closeConn();
+        }
+
+        return isLogin;
+    };
+
+
 };
+
+
+
+
 
 module.exports = Member;
