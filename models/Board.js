@@ -9,8 +9,12 @@ let boardsql = {
     selectOne: ' select board2.*, ' +
       ` to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') regdate2 ` +
       ' from board2 where bno = :1 ',
+
+    viewOne: 'update board2 set views = views + 1 where bno = :1 ',
+
     update: ' update board2 set title = :1, contents = :2 ' +
             ' where bno = :3 ',
+
     delete: ' delete from board2 where bno = :1 ',
 }
 
@@ -84,9 +88,12 @@ class Board {
             let row = null;
             while((row = await rs.getRow())) {
                 let bd = new Board(row.BNO, row.TITLE, row.USERID,
-                        row.REGDATE2, row.CONTENTS, row.VIEWS);
+                         row.REGDATE2, row.CONTENTS, row.VIEWS);
                 bds.push(bd);
             }
+                await conn.execute(boardsql.viewOne, params);
+                await conn.commit();
+
         } catch (e) {
             console.log(e);
         } finally {
