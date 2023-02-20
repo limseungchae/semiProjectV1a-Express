@@ -1,12 +1,11 @@
 const oracledb = require('../models/Oracle');
 
 let membersql = {
-    insertsql : ' insert into member ' +
-    ' (mno,userid,passwd,name,email) ' +
-    ' values (mno.nextval, :1,:2,:3,:4) '
+    insertsql : ' insert into member (mno,userid,passwd,name,email) ' +
+                ' values (mno.nextval, :1,:2,:3,:4) ',
 }
-class Member {
 
+class Member {
 
     constructor(userid, passwd, name, email) {
         this.userid = userid;
@@ -32,7 +31,6 @@ class Member {
         }
     }
 
-}
-;
+};
 
 module.exports = Member;
