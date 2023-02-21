@@ -1,21 +1,22 @@
-const oracledb = require('../models/Oracle');
+const oracledb = require('../../../Downloads/SemiProjectV1a-Express-master/models/Oracle');
 
 let boardsql = {
     insert: ' insert into board2 (bno, title, userid, contents) ' +
-            ' values (bno2.nextval, :1, :2, :3)',
+             ' values (bno2.nextval, :1, :2, :3)',
     select: ' select bno, title, userid, views, ' +
             ` to_char(regdate, 'YYYY-MM-DD') regdate ` +
             ' from board2 order by bno desc',
+
     selectOne: ' select board2.*, ' +
       ` to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') regdate2 ` +
       ' from board2 where bno = :1 ',
 
-    viewOne: 'update board2 set views = views + 1 where bno = :1 ',
+    viewOne: ' update board2 set views = views + 1 where bno = :1 ',
 
-    update: ' update board2 set title = :1, contents = :2 ' +
-            ' where bno = :3 ',
+    update: ' update board2 set title = :1, contents = :2, ' +
+            ' regdate = current_timestamp where bno = :3 ',
 
-    delete: ' delete from board2 where bno = :1 '
+    delete: ' delete from board2 where bno = :1 ',
 }
 
 class Board {
@@ -88,11 +89,12 @@ class Board {
             let row = null;
             while((row = await rs.getRow())) {
                 let bd = new Board(row.BNO, row.TITLE, row.USERID,
-                         row.REGDATE2, row.CONTENTS, row.VIEWS);
+                        row.REGDATE2, row.CONTENTS, row.VIEWS);
                 bds.push(bd);
             }
-                await conn.execute(boardsql.viewOne, params);
-                await conn.commit();
+
+            await conn.execute(boardsql.viewOne, params);
+            await conn.commit();
 
         } catch (e) {
             console.log(e);
@@ -105,18 +107,21 @@ class Board {
 
     async update() {
         let conn = null;
-        let params = [];
-        let insertcnt = 0;
+        let params = [this.title, this.contents, this.bno];
+        let updatecnt = 0;
 
         try {
             conn = await oracledb.makeConn();
+            let result = await conn.execute(boardsql.update, params);
+            await conn.commit();
+            if (result.rowsAffected > 0) updatecnt = result.rowsAffected;
         } catch (e) {
             console.log(e);
         } finally {
             await oracledb.closeConn();
         }
 
-        return insertcnt;
+        return updatecnt;
     }
 
     async delete(bno) {
@@ -128,7 +133,7 @@ class Board {
             conn = await oracledb.makeConn();
             let result = await conn.execute(boardsql.delete, params);
             await conn.commit();
-            if (result.rowsAffected > 0) deletecnt = result.rowsAffected
+            if (result.rowsAffected > 0) deletecnt = result.rowsAffected;
         } catch (e) {
             console.log(e);
         } finally {
@@ -138,6 +143,6 @@ class Board {
         return deletecnt;
     }
 
-};
+}
 
 module.exports = Board;
