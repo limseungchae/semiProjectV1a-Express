@@ -1,20 +1,22 @@
-const oracledb = require('../../../Downloads/SemiProjectV1a-Express-master/models/Oracle');
+const oracledb = require('../models/Oracle');
 
 let boardsql = {
     insert: ' insert into board2 (bno, title, userid, contents) ' +
-             ' values (bno2.nextval, :1, :2, :3)',
+        ' values (bno2.nextval, :1, :2, :3)',
     select: ' select bno, title, userid, views, ' +
-            ` to_char(regdate, 'YYYY-MM-DD') regdate ` +
-            ' from board2 order by bno desc',
+        ` to_char(regdate, 'YYYY-MM-DD') regdate ` +
+        ' from board2 order by bno desc',
 
     selectOne: ' select board2.*, ' +
-      ` to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') regdate2 ` +
-      ' from board2 where bno = :1 ',
+        ` to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') regdate2 ` +
+        ' from board2 where bno = :1 ',
+
+    selectCount: 'select count(bno) cnt from board2',
 
     viewOne: ' update board2 set views = views + 1 where bno = :1 ',
 
     update: ' update board2 set title = :1, contents = :2, ' +
-            ' regdate = current_timestamp where bno = :3 ',
+        ' regdate = current_timestamp where bno = :3 ',
 
     delete: ' delete from board2 where bno = :1 ',
 }
@@ -57,13 +59,19 @@ class Board {
         try {
             conn = await oracledb.makeConn();
             let result = await conn.execute(
-                boardsql.select, params, oracledb.options);
+                boardsql.selectCount, params, oracledb.options);
             let rs = result.resultSet;
+            let idx = -1, row = null;
+            if ((row = await rs.getRow())) idx = row.CNT;   // 총 게시글 수
 
-            let row = null;
+            result = await conn.execute(
+                boardsql.select, params, oracledb.options);
+            rs = result.resultSet;
+            row = null;
             while((row = await rs.getRow())) {
                 let bd = new Board(row.BNO, row.TITLE,
                     row.USERID, row.REGDATE, null, row.VIEWS);
+                bd.idx = idx--;   // 글번호 컬럼
                 bds.push(bd);
             }
         } catch (e) {
@@ -89,7 +97,7 @@ class Board {
             let row = null;
             while((row = await rs.getRow())) {
                 let bd = new Board(row.BNO, row.TITLE, row.USERID,
-                        row.REGDATE2, row.CONTENTS, row.VIEWS);
+                    row.REGDATE2, row.CONTENTS, row.VIEWS);
                 bds.push(bd);
             }
 
