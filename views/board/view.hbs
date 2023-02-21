@@ -12,6 +12,7 @@
 {{/section}}
 
 {{#section 'script'}}
+<script src="/js/view.js"></script>
 {{/section}}
 
 <main>
@@ -29,19 +30,20 @@
 
         <div><label class="drgup">본 문</label>
             <span id="contents">{{contents}}</span></div>
+
+            <input type="hidden" id="bno" value="{{bno}}">
+            <input type="hidden" id="uid" value="{{userid}}">
         {{/bds}}
 
         <div><label></label>
             {{#if session.userid}}
             <button type="button"
-                    onclick="location.href='/board/write'">새글쓰기</button>
-            {{/if}}
+                    onclick="location.href='/board/write'">새글쓰기</button> {{/if}}
             <button type="button"
                     onclick="location.href='/board/list'">목록으로</button>
             {{#if (eq session.userid bds.[0].userid)}}
             <button type="button" id="updatebtn">수정하기</button>
-            <button type="button" id="deletebtn">삭제하기</button>
-            {{/if}}
+            <button type="button" id="deletebtn">삭제하기</button> {{/if}}
         </div>
     </div>
 

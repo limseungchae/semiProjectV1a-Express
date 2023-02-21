@@ -2,7 +2,7 @@ const oracledb = require('../models/Oracle');
 
 let boardsql = {
     insert: ' insert into board2 (bno, title, userid, contents) ' +
-             ' values (bno2.nextval, :1, :2, :3)',
+            ' values (bno2.nextval, :1, :2, :3)',
     select: ' select bno, title, userid, views, ' +
             ` to_char(regdate, 'YYYY-MM-DD') regdate ` +
             ' from board2 order by bno desc',
@@ -15,7 +15,7 @@ let boardsql = {
     update: ' update board2 set title = :1, contents = :2 ' +
             ' where bno = :3 ',
 
-    delete: ' delete from board2 where bno = :1 ',
+    delete: ' delete from board2 where bno = :1 '
 }
 
 class Board {
@@ -119,22 +119,25 @@ class Board {
         return insertcnt;
     }
 
-    async delete() {
+    async delete(bno) {
         let conn = null;
-        let params = [];
-        let insertcnt = 0;
+        let params = [bno];
+        let deletecnt = 0;
 
         try {
             conn = await oracledb.makeConn();
+            let result = await conn.execute(boardsql.delete, params);
+            await conn.commit();
+            if (result.rowsAffected > 0) deletecnt = result.rowsAffected
         } catch (e) {
             console.log(e);
         } finally {
             await oracledb.closeConn();
         }
 
-        return insertcnt;
+        return deletecnt;
     }
 
-}
+};
 
 module.exports = Board;
