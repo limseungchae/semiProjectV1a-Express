@@ -69,12 +69,11 @@ class Zipcode {
 
         try {
             conn = await oracledb.makeConn();
-            let result = await conn.execute(
-                zipcodesql.dongsql, params, oracledb.options);
+            let result = await conn.execute(zipcodesql.dongsql, params, oracledb.options);
             let rs = result.resultSet;
 
             let row = null;
-            while ((row = await rs.getRow())) {
+            while((row = await rs.getRow())) {
                 let dong = {'dong': row.DONG};
                 dongs.push(dong);
             }
@@ -85,8 +84,8 @@ class Zipcode {
             await oracledb.closeConn(conn);
         }
 
-        return dongs
-    }
+        return dongs;
+    };
 
     async getZipcode(sido, gugun, dong) {
         let conn = null;
@@ -95,6 +94,15 @@ class Zipcode {
 
         try {
             conn = await oracledb.makeConn();
+            let result = await conn.execute(
+                zipcodesql.zipsql, params, oracledb.options);
+            let rs = result.resultSet;
+
+            let row = null;
+            while ((row = await rs.getRow())) {
+                let zip = {'zip': row.zip};
+                zip.push(dong);
+            }
 
         } catch (e) {
             console.log(e);
