@@ -65,7 +65,7 @@ const getDong = () => {
 };
 
 const setZipcode = (zips) => {
-    let objs = JSON.parse(zips)
+    let objs = JSON.parse(zips);  // 문자열 => 객체로 바꿈
 
 while (zipcode.lastChild) {
         zipcode.removeChild(zipcode.lastChild);
