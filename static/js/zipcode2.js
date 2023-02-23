@@ -13,25 +13,25 @@ const makeAddr = (elm, text) => {
 };
 
 const setSido = (sidos) => {
-    let objs = JSON.parse(sidos); // 문자열 => 객체로 바꿈
+    let objs = JSON.parse(sidos);  // 문자열 => 객체로 바꿈
 
     objs.forEach((obj, idx) => {
         makeopt(sido, obj.sido);
     });
 };
 
-const getSido = (sidos) => { // 서버에 시도 데이터 요청
+const getSido = () => { // 서버에 시도 데이터 요청
     fetch('/zipcode2/sido')
         .then(response => response.text())
         .then(text => setSido(text));
 };
 
 const setGugun = (guguns) => {
-    let objs = JSON.parse(guguns); // 문자열 => 객체로 바꿈
+    let objs = JSON.parse(guguns);  // 문자열 => 객체로 바꿈
 
-    while (gugun.lastChild) {
-        gugun.removeChild(gugun.lastChild)
-    };
+    while(gugun.lastChild) {
+        gugun.removeChild(gugun.lastChild);
+    }
 
     makeopt(gugun, '-- 시군구 --');
     objs.forEach((obj, idx) => {
@@ -46,18 +46,17 @@ const getGugun = () => {
 };
 
 const setDong = (dongs) => {
-    let objs = JSON.parse(dongs); // 문자열 => 객체로 바꿈
+    let objs = JSON.parse(dongs);  // 문자열 => 객체로 바꿈
 
-    while (dong.lastChild) {
-        dong.removeChild(dong.lastChild)
-    };
+    while(dong.lastChild) {
+        dong.removeChild(dong.lastChild);
+    }
 
     makeopt(dong, '-- 읍면동 --');
     objs.forEach((obj, idx) => {
         makeopt(dong, obj.dong);
     });
 };
-
 const getDong = () => {
     fetch(`/zipcode2/dong/${sido.value}/${gugun.value}`)
         .then(response => response.text())
@@ -67,23 +66,21 @@ const getDong = () => {
 const setZipcode = (zips) => {
     let objs = JSON.parse(zips);  // 문자열 => 객체로 바꿈
 
-while (zipcode.lastChild) {
+    while(zipcode.lastChild) {
         zipcode.removeChild(zipcode.lastChild);
     }
 
     objs.forEach((obj, idx) => {
-        let addr = `${obj.zipcode} ${obj.sido} ${obj.gugun} ${obj.dong} ${obj.ri} ${obj.bunji}`;
-
-    makeAddr(zipcode, addr);
+        let addr = `${obj.zipcode} ${obj.sido} ${obj.gugun}` +
+            ` ${obj.dong} ${obj.ri} ${obj.bunji} `;
+        makeAddr(zipcode, addr);
     });
 };
-
 const getZipcode = () => {
-    fetch(`/zipcode2/zip/${sido.value}/${gugun.value}/ ${dong.value}`)
+    fetch(`/zipcode2/zip/${sido.value}/${gugun.value}/${dong.value}`)
         .then(response => response.text())
         .then(text => setZipcode(text));
 };
-
 
 let sido = document.querySelector('#sido');
 let gugun = document.querySelector('#gugun');
