@@ -64,7 +64,7 @@ class Board {
         return insertcnt;
     }
 
-    async select(stnum) {  // 게시판 목록 출력
+    async select(stnum, ftype, fkey) {  // 게시판 목록 출력
         let conn = null;
         let params = [stnum, stnum + ppg];
         let bds = [];   // 결과 저장용
@@ -79,7 +79,7 @@ class Board {
             let idx = allcnt - stnum + 1;
 
             let result = await conn.execute(
-                boardsql.paging1 + where +boardsql.paging2, params, oracledb.options);
+                boardsql.paging1 + where + boardsql.paging2, params, oracledb.options);
             let rs = result.resultSet;
             let row = null;
             while((row = await rs.getRow())) {
