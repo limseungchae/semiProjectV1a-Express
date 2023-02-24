@@ -12,7 +12,7 @@
         .board td:nth-child(2), .board th:nth-child(2) {
             text-align: left }
         .pagenation { list-style: none; padding: 0;
-            margin: 0 auto; width: 500px }
+            margin: 0 auto; text-align: center }
         .pagenation li { display: inline-block; padding: 5px 4px; }
         .cpage { font: bold 32px '맑은 고딕'; color: red; }
         .prev { color: #cccccc }
@@ -55,7 +55,12 @@
         {{/bds}}
     </table>
     <ul class="pagenation">
+        {{#if pgn.isprev10}}
         <li> <a href="?cpg={{pgn.prev}}">이전</a> </li>
+        {{/if}}
+        {{#if}}
+        <li> <a href="?cpg={{pgn.prev10}}">이전-10</a> </li>
+        {{/if}}
         {{#stpgns}}
             {{#if iscpg}}
                 <li class="cpage">{{num}}</li>
@@ -63,5 +68,10 @@
                 <li><a href="?cpg={{num}}">{{num}}</a></li>
             {{/if}}
         {{/stpgns}}
+        {{#if pgn.isnext}}
         <li> <a href="?cpg={{pgn.next}}">다음</a> </li></ul>
+        {{/if}}
+        {{#if pgn.isnext10}}
+        <li> <a href="?cpg={{pgn.next10}}">다음+10</a> </li></ul>
+        {{/if}}
 </main>
