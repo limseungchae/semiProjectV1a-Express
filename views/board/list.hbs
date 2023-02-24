@@ -1,38 +1,35 @@
 {{#section 'css'}}
-<style>
-    .board { width: 700px; margin: 0 auto;
-        table-layout: fixed; border-collapse: collapse }
-
-    .board td { text-align: center; padding: 7px }
-    .board td:nth-child(2) { white-space: nowrap;
-        overflow: hidden; text-overflow: ellipsis; }
-    .board th { padding:7px; background: lightgoldenrodyellow }
-    .board tr:nth-child(odd) { background: #e4f7ba }
-    .board tr:nth-child(even) { background: #cef279 }
-    .alignrgt { text-align-last: right }
-    .board td:nth-child(2), .board th:nth-child(2) {
-        text-align: left }
-
-    .pagenation { list-style: none; padding: 0;
-        margin: 0 auto; width: 500px }
-    .pagenation li { display: inline-block; padding: 5px 4px; }
-    .cpage { font: bold 48px '맑은 고딕'; color: red; }
-    .prev { color: #cccccc }
-</style>
+    <style>
+        .board { width: 700px; margin: 0 auto;
+            table-layout: fixed; border-collapse: collapse }
+        .board td { text-align: center; padding: 7px }
+        .board td:nth-child(2) { white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis; }
+        .board th { padding:7px; background: lightgoldenrodyellow }
+        .board tr:nth-child(odd) { background: #e4f7ba }
+        .board tr:nth-child(even) { background: #cef279 }
+        .alignrgt { text-align-last: right }
+        .board td:nth-child(2), .board th:nth-child(2) {
+            text-align: left }
+        .pagenation { list-style: none; padding: 0;
+            margin: 0 auto; width: 500px }
+        .pagenation li { display: inline-block; padding: 5px 4px; }
+        .cpage { font: bold 32px '맑은 고딕'; color: red; }
+        .prev { color: #cccccc }
+    </style>
 {{/section}}
 
 {{#section 'script'}}
-<script>
-let newbtn = document.querySelector('#newbtn');
-// optional chaining (?.)
-// ? 앞의 객체변수가 null 이거나 undefined 라면
-// . 뒤의 코드를 실행하지 않음
-newbtn?.addEventListener('click', ()=>{
-    location.href = '/board/write';
-});
-</script>
+    <script>
+        let newbtn = document.querySelector('#newbtn');
+        // optional chaining (?.)
+        // ? 앞의 객체변수가 null 이거나 undefined 라면
+        // . 뒤의 코드를 실행하지 않음
+        newbtn?.addEventListener('click', ()=>{
+            location.href = '/board/write';
+        });
+    </script>
 {{/section}}
-
 <main>
     <h2>게시판</h2>
     <table class="board">
@@ -44,9 +41,9 @@ newbtn?.addEventListener('click', ()=>{
             <col style="width: 10%">
         </colgroup>
         <tr><td colspan="5" class="alignrgt">
-        {{#if session.userid}}
-            <button type="button" id="newbtn">새글쓰기</button>
-        {{else}} &nbsp; {{/if}}
+            {{#if session.userid}}
+                <button type="button" id="newbtn">새글쓰기</button>
+            {{else}} &nbsp; {{/if}}
         </td></tr>
         <tr><th>번호</th><th>제목</th><th>작성자</th>
             <th>작성일</th><th>조회</th></tr>
@@ -57,15 +54,14 @@ newbtn?.addEventListener('click', ()=>{
                 <td>{{views}}</td></tr>
         {{/bds}}
     </table>
-
     <ul class="pagenation">
-        <li> <a href="?cpg{{pgn.prev}}">이전</a> </li>
+        <li> <a href="?cpg={{pgn.prev}}">이전</a> </li>
         {{#stpgns}}
             {{#if iscpg}}
-                 <li class="cpage">{{num}}</li>
+                <li class="cpage">{{num}}</li>
             {{else}}
-                 <li><a href="?cpg={{num}}">{{num}}</a></li>
+                <li><a href="?cpg={{num}}">{{num}}</a></li>
             {{/if}}
         {{/stpgns}}
-        <li><a href="?cpg{{pgn.next}}">다음</a></li></ul>
+        <li> <a href="?cpg={{pgn.next}}">다음</a> </li></ul>
 </main>
