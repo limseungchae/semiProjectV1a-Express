@@ -15,12 +15,12 @@ const ppg = 15;
 router.get('/list', async (req, res) => {
     let { cpg } = req.query;
     cpg = cpg ? parseInt(cpg) : 1;
-    let stnum = (cpg - 1) * ppg + 1;  // 지정한 페이지 범위 시작값 계산산
+    let stnum = (cpg - 1) * ppg + 1;  // 지정한 페이지 범위 시작값 계산
 
-    let bds = new Board().select(stnum).then((bds) => bds);
-
-    let allcnt = new Board().selectCount().then((cnt) => cnt);  // 총게시물 수
-    let alpg = Math.ceil(await allcnt / ppg); // 총 페이지 계산
+    let result = new Board().select(stnum).then((result) => result);
+    let bds = result.then(r => r.bds);
+    let allcnt = result.then(r => r.allcnt);      // 총게시물 수
+    let alpg = Math.ceil(await allcnt / ppg);  // 총 페이지수 계산
     // 페이지네이션 블럭 생성
     // 1 페이지의 페이지네이션 : 1 2 3 4 5 6 7 8 9 10
     // 2 페이지의 페이지네이션 : 1 2 3 4 5 6 7 8 9 10
@@ -43,8 +43,7 @@ router.get('/list', async (req, res) => {
         stpgns.push(pgn);
      }
     }
-
-
+    
     let isprev = (cpg - 1 > 0); // 이전 버튼 표시 여부
     let isnext = (cpg < alpg);  // 다음 버튼 표시 여부
     let isprev10 = (cpg - 10 > 0);
