@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Board = require('../models/Board');
+const {query} = require("express");
 const ppg = 15;
 
 // 페이징 기능 지원
@@ -13,11 +14,14 @@ const ppg = 15;
 // stnum : (cpg - 1) * ppg + 1
 // ednum : stnum + ppg
 router.get('/list', async (req, res) => {
-    let { cpg } = req.query;
+    let { cpg, ftype, fkey } = [ req.query.cpg, req.query.ftype, req.query.fkey ];
+    console.log(ftype, fkey);
+
+
     cpg = cpg ? parseInt(cpg) : 1;
     let stnum = (cpg - 1) * ppg + 1;  // 지정한 페이지 범위 시작값 계산
 
-    let result = new Board().select(stnum).then((result) => result);
+    let result = new Board().select(stnum, ftype, fkey).then((result) => result);
     let bds = result.then(r => r.bds);
     let allcnt = result.then(r => r.allcnt);      // 총게시물 수
     let alpg = Math.ceil(await allcnt / ppg);  // 총 페이지수 계산
@@ -53,10 +57,13 @@ router.get('/list', async (req, res) => {
         'isprev': isprev, 'isnext': isnext,
         'isprev10': isprev10, 'isnext10': isnext10};
 
-    console.log(cpg, stnum, stpgn);
+    console.log(cpg, stnum, stpgn, isnext);
+
+    // 질의문자열 정의
+    let qry = fkey ? `&frype=${frype}&fkey=${fkey}`: '';
 
     res.render('board/list', {title: '게시판 목록',
-        bds: await bds, stpgns: stpgns, pgn: pgn });
+        bds: await bds, stpgns: stpgns, pgn: pgn, qry: qry });
 });
 
 router.get('/write', (req, res) => {

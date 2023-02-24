@@ -26,6 +26,14 @@ let boardsql = {
     delete: ' delete from board2 where bno = :1 ',
 }
 
+// 동적쿼리 생성 함수
+const makeWhere = (ftype, fkey) => {
+    let where = ` where title = '${fkey}' `;
+    if (ftype == 'userid') where = ` where userid = '${fkey}' `
+    else if (ftype == 'contents') where = `  where contents like '%${fkey}%'  `
+    return where;
+};
+
 class Board {
 
     constructor(bno, title, userid, regdate, contents, views) {
@@ -61,14 +69,17 @@ class Board {
         let params = [stnum, stnum + ppg];
         let bds = [];   // 결과 저장용
         let allcnt = -1;
+        let where = '';
+
+        if (fkey !== undefined) where = makeWhere(ftype, fkey);
 
         try {
             conn = await oracledb.makeConn();
-            allcnt  = await this.selectCount(conn);  // 총 게시글수 계산
+            allcnt  = await this.selectCount(conn, where);  // 총 게시글수 계산
             let idx = allcnt - stnum + 1;
 
             let result = await conn.execute(
-                boardsql.paging1 + boardsql.paging2, params, oracledb.options);
+                boardsql.paging1 + where +boardsql.paging2, params, oracledb.options);
             let rs = result.resultSet;
             let row = null;
             while((row = await rs.getRow())) {
@@ -87,13 +98,13 @@ class Board {
         return result;
     }
 
-    async selectCount(conn) {  // 총 게시물 수 계산
+    async selectCount(conn, where) {  // 총 게시물 수 계산
         let params = [];
         let cnt = -1;   // 결과 저장용
 
         try {
             let result = await conn.execute(
-                boardsql.selectCount, params, oracledb.options);
+                boardsql.selectCount + where , params, oracledb.options);
             let rs = result.resultSet;
             let row = null;
             if ((row = await rs.getRow())) cnt = row.CNT;
