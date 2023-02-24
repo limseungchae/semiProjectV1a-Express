@@ -54,24 +54,24 @@
                 <td>{{views}}</td></tr>
         {{/bds}}
     </table>
-    <ul class="pagenation">
-        {{#if pgn.isprev10}}
+<ul class="pagenation">
+    {{#if pgn.isprev}}
         <li> <a href="?cpg={{pgn.prev}}">이전</a> </li>
-        {{/if}}
-        {{#if}}
+    {{/if}}
+    {{#if pgn.isprev10}}
         <li> <a href="?cpg={{pgn.prev10}}">이전-10</a> </li>
+    {{/if}}
+    {{#stpgns}}
+        {{#if iscpg}}
+            <li class="cpage">{{num}}</li>
+        {{else}}
+            <li><a href="?cpg={{num}}">{{num}}</a></li>
         {{/if}}
-        {{#stpgns}}
-            {{#if iscpg}}
-                <li class="cpage">{{num}}</li>
-            {{else}}
-                <li><a href="?cpg={{num}}">{{num}}</a></li>
-            {{/if}}
-        {{/stpgns}}
-        {{#if pgn.isnext}}
+    {{/stpgns}}
+    {{#if pgn.isnext10}}
+        <li> <a href="?cpg={{pgn.next10}}">다음+10</a> </li>
+    {{/if}}
+    {{#if pgn.isnext}}
         <li> <a href="?cpg={{pgn.next}}">다음</a> </li></ul>
-        {{/if}}
-        {{#if pgn.isnext10}}
-        <li> <a href="?cpg={{pgn.next10}}">다음+10</a> </li></ul>
-        {{/if}}
+    {{/if}}
 </main>

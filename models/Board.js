@@ -64,7 +64,7 @@ class Board {
 
         try {
             conn = await oracledb.makeConn();
-            allcnt = await this.selectCount(conn);  // 총 게시글수 계산
+            allcnt  = await this.selectCount(conn);  // 총 게시글수 계산
             let idx = allcnt - stnum + 1;
 
             let result = await conn.execute(
@@ -99,8 +99,6 @@ class Board {
             if ((row = await rs.getRow())) cnt = row.CNT;
         } catch (e) {
             console.log(e);
-        } finally {
-            await oracledb.closeConn();
         }
 
         return cnt;

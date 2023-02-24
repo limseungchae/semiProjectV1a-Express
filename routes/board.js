@@ -43,7 +43,7 @@ router.get('/list', async (req, res) => {
         stpgns.push(pgn);
      }
     }
-    
+
     let isprev = (cpg - 1 > 0); // 이전 버튼 표시 여부
     let isnext = (cpg < alpg);  // 다음 버튼 표시 여부
     let isprev10 = (cpg - 10 > 0);
@@ -52,7 +52,6 @@ router.get('/list', async (req, res) => {
         'prev10': cpg - 10, 'next10': cpg + 10,
         'isprev': isprev, 'isnext': isnext,
         'isprev10': isprev10, 'isnext10': isnext10};
-
 
     console.log(cpg, stnum, stpgn);
 
